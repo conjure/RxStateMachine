@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RxStateMachine</string>
+    <string name="unlocked">Unlocked</string>
+    <string name="locked">Locked</string>
+    <string name="insert_coin">Insert coin</string>
+    <string name="turn">Turn</string>
+    <string name="simple_turnstile">Simple Turnstile</string>
+</resources>
