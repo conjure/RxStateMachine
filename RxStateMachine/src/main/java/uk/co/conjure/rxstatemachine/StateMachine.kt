@@ -53,7 +53,7 @@ abstract class StateMachine<A : Any, D : Any, S : State<D, A, E, S>, E : Any> co
     /**
      * Function to implement the logic for all Effects
      */
-    abstract fun execute(effect: E): Observable<A>
+    abstract fun execute(effect: E): Observable<out A>
 
     private val engine =
         Completable.mergeArray(
@@ -66,7 +66,7 @@ abstract class StateMachine<A : Any, D : Any, S : State<D, A, E, S>, E : Any> co
                 })
             .doOnDispose { reset() }
 
-    private fun observeActions(state: S, effect: Observable<A>) =
+    private fun observeActions(state: S, effect: Observable<out A>) =
         Observable.merge(effect.observeOn(scheduler), actions)
             .withLatestFrom(data) { action, data -> Update(action, state, data) }
             .concatMapCompletable { update ->
@@ -75,7 +75,7 @@ abstract class StateMachine<A : Any, D : Any, S : State<D, A, E, S>, E : Any> co
                     .flatMapCompletable { updateState(it) }
             }
 
-    private fun runStateEffect(state: S, data: D): Observable<A> {
+    private fun runStateEffect(state: S, data: D): Observable<out A> {
         val effect = state.onEnter?.create(data)
         return if (effect == null) Observable.empty()
         else return execute(effect)
